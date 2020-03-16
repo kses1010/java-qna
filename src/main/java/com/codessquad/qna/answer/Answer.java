@@ -2,6 +2,7 @@ package com.codessquad.qna.answer;
 
 import com.codessquad.qna.question.Question;
 import com.codessquad.qna.user.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,17 +12,21 @@ import java.time.format.DateTimeFormatter;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private Long id;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
+    @JsonProperty
     private User writer;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
+    @JsonProperty
     private Question question;
 
     @Lob
+    @JsonProperty
     private String contents;
 
     private LocalDateTime formattedWrittenTime = LocalDateTime.now();
@@ -61,13 +66,4 @@ public class Answer {
         return !this.writer.equals(loginUser);
     }
 
-    @Override
-    public String toString() {
-        return "Answer{" +
-                "id=" + id +
-                ", writer=" + writer +
-                ", contents='" + contents + '\'' +
-                ", formattedWrittenTime=" + formattedWrittenTime +
-                '}';
-    }
 }

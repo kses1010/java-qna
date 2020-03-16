@@ -7,18 +7,14 @@ import com.codessquad.qna.utils.HttpSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
-@RequestMapping("/questions/{questionId}/answers")
-public class AnswerController {
-    private Logger log = LoggerFactory.getLogger(AnswerController.class);
+@RestController
+@RequestMapping("/api/questions/{questionId}/answers")
+public class ApiAnswerController {
+    private Logger log = LoggerFactory.getLogger(ApiAnswerController.class);
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -27,18 +23,15 @@ public class AnswerController {
     private AnswerRepository answerRepository;
 
     @PostMapping("")
-    public String createAnswer(@PathVariable Long questionId, String contents, HttpSession session) {
+    public Answer createAnswer(@PathVariable Long questionId, String contents, HttpSession session) {
         if (HttpSessionUtils.isNoneExistentUser(session)) {
-            return "redirect:/users/loginForm";
+            return null;
         }
-
+        log.info("세션확인완료");
         User loginUser = HttpSessionUtils.getUserFromSession(session);
         Question question = questionRepository.findById(questionId).orElseThrow(IllegalStateException::new);
         Answer answer = new Answer(loginUser, question, contents);
-        log.info("answer confirm");
-        answerRepository.save(answer);
-        log.info("answer save: '{}'",answer);
-        return "redirect:/questions/" + questionId;
+        return answerRepository.save(answer);
     }
 
     @DeleteMapping("/{id}")

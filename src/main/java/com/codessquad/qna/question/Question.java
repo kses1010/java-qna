@@ -2,6 +2,8 @@ package com.codessquad.qna.question;
 
 import com.codessquad.qna.answer.Answer;
 import com.codessquad.qna.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,18 +18,22 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JsonProperty
     private User writer;
 
     @Column(nullable = false, length = 25)
+    @JsonProperty
     private String title;
 
     @Lob
+    @JsonProperty
     private String contents;
 
     private LocalDateTime formattedWrittenTime = LocalDateTime.now();
 
     @OneToMany(mappedBy = "question")
-    @OrderBy("id ASC")
+    @OrderBy("id desc ")
+    @JsonIgnore
     private List<Answer> answers;
 
     public Question() {}
