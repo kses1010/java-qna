@@ -57,7 +57,7 @@ public class QuestionController {
     public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
         Question question = questionRepository.findById(id).orElseThrow(IllegalStateException::new);
         Result result = valid(session, question);
-        if (result.isNotValid()) {
+        if (!result.isValid()) {
             model.addAttribute("errorMessage", result.getErrorMessage());
             return "user/login";
         }
@@ -71,7 +71,7 @@ public class QuestionController {
                                  Model model, HttpSession session) {
         Question question = questionRepository.findById(id).orElseThrow(IllegalStateException::new);
         Result result = valid(session, question);
-        if (result.isNotValid()) {
+        if (!result.isValid()) {
             model.addAttribute("errorMessage", result.getErrorMessage());
             return "user/login";
         }
@@ -86,7 +86,7 @@ public class QuestionController {
     public String deleteQuestion(@PathVariable Long id, Model model, HttpSession session) {
         Question question = questionRepository.findById(id).orElseThrow(IllegalStateException::new);
         Result result = valid(session, question);
-        if (result.isNotValid()) {
+        if (!result.isValid()) {
             model.addAttribute("errorMessage", result.getErrorMessage());
             return "user/login";
         }

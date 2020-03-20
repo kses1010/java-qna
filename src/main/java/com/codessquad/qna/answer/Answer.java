@@ -29,7 +29,7 @@ public class Answer {
     @JsonProperty
     private String contents;
 
-    private LocalDateTime formattedWrittenTime = LocalDateTime.now();
+    private LocalDateTime createdWrittenTime = LocalDateTime.now();
 
     public Answer() {}
 
@@ -39,11 +39,11 @@ public class Answer {
         this.question = question;
     }
 
-    public String getFormattedWrittenTime() {
-        if (formattedWrittenTime == null) {
+    public String getCreatedWrittenTime() {
+        if (createdWrittenTime == null) {
             return "";
         }
-        return formattedWrittenTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return createdWrittenTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public Long getId() {

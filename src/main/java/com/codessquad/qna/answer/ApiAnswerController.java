@@ -4,6 +4,7 @@ import com.codessquad.qna.question.Question;
 import com.codessquad.qna.question.QuestionRepository;
 import com.codessquad.qna.user.User;
 import com.codessquad.qna.utils.HttpSessionUtils;
+import com.codessquad.qna.utils.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,23 +32,24 @@ public class ApiAnswerController {
         User loginUser = HttpSessionUtils.getUserFromSession(session);
         Question question = questionRepository.findById(questionId).orElseThrow(IllegalStateException::new);
         Answer answer = new Answer(loginUser, question, contents);
+        question.addAnswer();
         return answerRepository.save(answer);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteAnswer(@PathVariable Long id, HttpSession session) {
+    public Result delete(@PathVariable Long questionId, @PathVariable Long id, HttpSession session) {
         if (HttpSessionUtils.isNoneExistentUser(session)) {
-            log.info("로그인하세요.");
-            return "redirect:/users/loginForm";
+            return Result.fail("로그인해야 합니다.");
         }
-        User loginUser = HttpSessionUtils.getUserFromSession(session);
         Answer answer = answerRepository.findById(id).orElseThrow(IllegalStateException::new);
+        User loginUser = HttpSessionUtils.getUserFromSession(session);
         if (answer.isNotSameWriter(loginUser)) {
-            log.info("해당 로그인이 아닙니다.");
-            return "redirect:/users/loginForm";
+            return Result.fail("자신의 글만 삭제할 수 있습니다.");
         }
         answerRepository.delete(answer);
-        log.info("삭제완료.");
-        return "redirect:/questions/{questionId}";
+        Question question = questionRepository.findById(questionId).orElseThrow(IllegalStateException::new);
+        question.deleteAnswer();
+        questionRepository.save(question);
+        return Result.ok();
     }
 }

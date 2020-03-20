@@ -29,7 +29,10 @@ public class Question {
     @JsonProperty
     private String contents;
 
-    private LocalDateTime formattedWrittenTime = LocalDateTime.now();
+    @JsonProperty
+    private Integer countOfAnswer;
+
+    private LocalDateTime createdWrittenTime = LocalDateTime.now();
 
     @OneToMany(mappedBy = "question")
     @OrderBy("id desc ")
@@ -57,11 +60,11 @@ public class Question {
         return writer;
     }
 
-    public String getFormattedWrittenTime() {
-        if (formattedWrittenTime == null) {
+    public String getCreatedWrittenTime() {
+        if (createdWrittenTime == null) {
             return "";
         }
-        return formattedWrittenTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return createdWrittenTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public String getTitle() {
@@ -80,15 +83,28 @@ public class Question {
         return !this.writer.equals(loginUser);
     }
 
+    public Integer getCountOfAnswer() {
+        return countOfAnswer;
+    }
+
+    public void addAnswer() {
+        this.countOfAnswer += 1;
+    }
+
+    public void deleteAnswer() {
+        this.countOfAnswer -= 1;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
                 "writer='" + writer + '\'' +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
-                ", formattedWrittenTime='" + formattedWrittenTime + '\'' +
+                ", createdWrittenTime='" + createdWrittenTime + '\'' +
                 '}';
     }
+
 
 
 }
