@@ -1,4 +1,4 @@
-$(".answer-write input[type='submit']").on("click", addAnswer);
+$(document).on('click', ".answer-write input[type='submit']", addAnswer);
 
 function addAnswer(e) {
     e.preventDefault();
@@ -21,8 +21,8 @@ function addAnswer(e) {
 }
 
 function onError(data, status) {
-    console.log(data);
-    console.log("failure");
+    console.error(data);
+    console.error("failure");
 }
 
 function onSuccess(data, status) {
@@ -48,12 +48,13 @@ function deleteAnswer(e) {
         url: url,
         dataType: 'json',
         error: function (xhr, status) {
-            console.log("error");
+            console.error("error");
         },
         success: function (data, status) {
             console.log(data);
             if (data.valid) {
                 deleteBtn.closest("article").remove();
+                $(".qna-comment-count strong").text(data.question.countOfAnswer);
             } else {
                 alert(data.errorMessage);
             }
@@ -64,9 +65,8 @@ function deleteAnswer(e) {
 String.prototype.format = function () {
     let args = arguments;
     return this.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined'
+        return typeof args[number] !== 'undefined'
             ? args[number]
-            : match
-            ;
+            : match;
     });
 };

@@ -50,6 +50,6 @@ public class ApiAnswerController {
         Question question = questionRepository.findById(questionId).orElseThrow(IllegalStateException::new);
         question.deleteAnswer();
         questionRepository.save(question);
-        return Result.ok();
+        return Result.ok(question);
     }
 }
