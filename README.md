@@ -32,6 +32,10 @@ StringBuilder, StringBuffer를 사용하자.
 
 ## 5.2 AJAX를 활용해 답변 삭제 기능 구현
 
+삭제할 시 valid가 어떤역할을 하는지 정확하게 알 것. 
+
+`Result.java`의 boolean 타입의 valid를 역으로 설정하는 바람에 적용이 안되어 고생을 했다.
+
 ```javascript
 $(document).on('click', '.link-delete-article', deleteAnswer);
 
@@ -72,8 +76,52 @@ SELECT COUNT(*) FROM ANSWER WHERE QUESTION_ID = 1;	//count = 2
 
 Answer기능에만 Ajax를 활용한 XHR방식의 요청이라 새로고침을 진행해야 답변수 카운트가 측정된다.
 
+삭제에 대한 카운트를 실시간으로 적용하려면 `AnswerController`에서 return data가 무엇인지 알아야한다.
+
+data가 뭘 의미하는지 몰라서 고생했다.
+
+```javascript
+$.ajax({
+        type: 'delete',
+        url: url,
+        dataType: 'json',
+        error: function (xhr, status) {
+            console.error("error");
+        },
+        success: function (data, status) {  //여기서 data는 question data를 의미한다.
+            console.log(data);
+            if (data.valid) {
+                deleteBtn.closest("article").remove();
+                $(".qna-comment-count strong").text(data.question.countOfAnswer);
+            } else {
+                alert(data.errorMessage);
+            }
+        }
+    })
+
+AnswerController.java
+@DeleteMapping
+~~~
+return Result.ok(question);	// 중요!!
+```
+
+
+
 ## 5.4 도메인 클래스에 대한 중복 제거 및 리팩토링
 
+중복제거하면서 깨달은건 패키지를 각 역할(User, Question, Answer)로 하기 보단 도메인으로 나누어서
+도메인(Controller, Domain(User, Answer, Question), Repository)로 나누는 것이 좋다. 
+그 이유는 객체지향의 진실과 오해에서 읽었는데 기억이안남...
 
+진행중 Question 만들때마다 CountOfAnswer을 지정해주지 않아 NPE(nullpoint에러)가 발생하는걸 깨달았다. 
+NPE를 조심하자. 
 
 ## 5.5 Swagger 라이브러리를 통한  API 문서화 및 테스트
+
+Swagger 빌드할 때 버전 꼭 확인하자! 버전이 통일되어야 빌드 에러가 나지 않는다.
+
+```groovy
+compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.5.0'
+compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.5.0'
+```
+
