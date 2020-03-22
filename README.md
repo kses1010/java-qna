@@ -2,7 +2,12 @@
 
 ## comment 사항
 
-- [ ] 
+- [ ] 중복 코드에 대한 리팩토링 하기
+- [x] formattedWrittenTime에서 메서드 용도에 따른 이름 변경하기
+- [ ] answers list 활용하기
+- [ ] OrderBy 어노테이션보다는 repository의 쿼리메서드를 생성하여 호출하기
+- [ ] questionRepository.findById(id).orElseThrow(IllegalStateException::new)) 해당 중복되는 코드 리팩토링하기
+- [ ] LocalDateTime 컨버터 삭제.
 
 ---
 
@@ -27,11 +32,45 @@ StringBuilder, StringBuffer를 사용하자.
 
 ## 5.2 AJAX를 활용해 답변 삭제 기능 구현
 
+```javascript
+$(document).on('click', '.link-delete-article', deleteAnswer);
 
+function deleteAnswer(e) {
+    e.preventDefault();
+ 
+    let deleteBtn = $(this);			// 여기서 this는 event e를 지칭한다.
+    let url = deleteBtn.attr("href");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        dataType : 'json',
+        error : function (xhr, status) {
+            console.log("error");
+        },								// 에러메시지 이벤트작동
+        success : function (data, status) {
+            console.log("data");
+            if (data.valid) {
+                deleteBtn.closest("article").remove();
+            } else {
+                alert(data.errorMessage);
+            }
+        }
+    })
+```
+
+삭제구현시 해당 클래스 이름이 답변 삭제기능과 같아서 버그 발생. 클래스 이름을 구분지을 수 있도록 변경할 것.
 
 ## 5.3 질문 목록에 답변 수 보여주기 기능 추가
 
+```sql
+SELECT COUNT(*) FROM ANSWER WHERE QUESTION_ID = 1;	//count = 2
+```
 
+해당 기능을 실행하고 questioRepo에 다시 저장해야 적용이 된다.
+
+Answer기능에만 Ajax를 활용한 XHR방식의 요청이라 새로고침을 진행해야 답변수 카운트가 측정된다.
 
 ## 5.4 도메인 클래스에 대한 중복 제거 및 리팩토링
 
