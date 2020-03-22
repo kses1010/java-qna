@@ -41,6 +41,7 @@ public class QuestionController {
 
         User sessionUser = HttpSessionUtils.getUserFromSession(session);
         Question newQuestion = new Question(sessionUser, title, contents);
+        newQuestion.setZeroCountOfAnswer(0);
         questionRepository.save(newQuestion);
         return "redirect:/";
     }
@@ -106,5 +107,4 @@ public class QuestionController {
         }
         return Result.ok();
     }
-
 }

@@ -1,18 +1,13 @@
 package com.codessquad.qna.user;
 
+import com.codessquad.qna.utils.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty
-    private Long id;
-
+public class User extends AbstractEntity {
     @Column(nullable = false, length = 20, unique = true)
     @JsonProperty
     private String userId;
@@ -24,6 +19,7 @@ public class User {
     @Column(nullable = false)
     @JsonProperty
     private String name;
+
     @Column(nullable = false)
     @JsonProperty
     private String email;
@@ -50,8 +46,8 @@ public class User {
         this.email = updateUser.email;
     }
 
-    public Long getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
     public boolean matchId(Long newId) {
@@ -59,11 +55,7 @@ public class User {
             return false;
         }
 
-        return newId.equals(id);
-    }
-
-    public String getUserId() {
-        return userId;
+        return newId.equals(getId());
     }
 
     public boolean matchPassword(String inputPassword) {
@@ -87,21 +79,9 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
     public String toString() {
         return "User{ " +
+                "id='" + getId() + '\'' +
                 "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
