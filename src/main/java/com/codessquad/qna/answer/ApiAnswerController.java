@@ -44,6 +44,7 @@ public class ApiAnswerController {
         Answer answer = answerRepository.findById(id).orElseThrow(IllegalStateException::new);
         User loginUser = HttpSessionUtils.getUserFromSession(session);
         if (answer.isNotSameWriter(loginUser)) {
+            log.info("delete fail");
             return Result.fail("자신의 글만 삭제할 수 있습니다.");
         }
         answerRepository.delete(answer);

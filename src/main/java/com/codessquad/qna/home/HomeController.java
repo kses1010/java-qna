@@ -16,5 +16,4 @@ public class HomeController {
         model.addAttribute("questions", questionRepository.findAll());
         return "main";
     }
-
 }
