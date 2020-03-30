@@ -2,12 +2,12 @@
 
 ## comment 사항
 
-- [ ] 중복 코드에 대한 리팩토링 하기
+- [x] 중복 코드에 대한 리팩토링 하기
 - [x] formattedWrittenTime에서 메서드 용도에 따른 이름 변경하기
-- [ ] answers list 활용하기
-- [ ] OrderBy 어노테이션보다는 repository의 쿼리메서드를 생성하여 호출하기
-- [ ] questionRepository.findById(id).orElseThrow(IllegalStateException::new)) 해당 중복되는 코드 리팩토링하기
-- [ ] LocalDateTime 컨버터 삭제.
+- [x] answers list 활용하기
+- [x] OrderBy 어노테이션보다는 repository의 쿼리메서드를 생성하여 호출하기
+- [x] questionRepository.findById(id).orElseThrow(IllegalStateException::new)) 해당 중복되는 코드 리팩토링하기
+- [x] LocalDateTime 컨버터 삭제.
 
 ---
 
